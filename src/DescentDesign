@@ -1,0 +1,41 @@
+Inicializar jugador XXX
+Mostrar estado aventurero XXX
+Selección rival
+    Solicitar nombre rival XXX
+    Comprobar nombre rival XXX
+    Selección azar rival XXX
+Combate
+    Ronda
+        Mostrar info ronda XXX
+        Solicitar estrategia aventurero XXX
+        Seleccionar estrategia rival XXX
+        Chequeo penalización XXX
+        Resolución ronda XXX
+            Resultado estrategía aventurero/rival  XXX
+            Aplicar daño aventurero/rival  XXX
+            Aplicar recuperación aventurero/rival XXX
+            Aplicar penalización aventurero/rival XXX
+    Comprobar finalización combate XXX
+    Actualizar aventurero XXX
+        Actualizar puntos experiencia XXX
+        Actualizar nivel + características(ataque/defensa) XXX
+        Actualizar puntos vida XXX
+Comprobar victoria final XXX
+TODO Comentar módulos
+TODO Pasar texto a constantes
+TODO Inicio del combate indicar el número de combate y rival
+TODO Crear objeto combate/ronda?
+TODO Segunda parte ejercicio FILES
+
+Datos inicio
+1. Identificador
+2. Nivel
+5. Puntos vida maximos
+6. Ataque
+7. Defensa
+
+Jug\Adv         Atac                    Defensa                 Engany              Maniobra
+XAtac            Jug i Adv: Danyat       Adv: Guarit             Adv: Danyat         Adv: Danyat
+XDefensa         Jug: Guarit             Jug i Adv: Guarit	Jug: Danyat x2      Jug: Penalitzat
+Engany          Jug: Danyat             Adv: Danyat x2          Jug i Adv: Danyat   Jug: Penalitzat
+Maniobra	Jug: Danyat             Adv: Penalitzat         Adv: Penalitzat     Jug i Adv: Penalitzat
