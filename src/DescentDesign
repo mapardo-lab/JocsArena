@@ -23,7 +23,8 @@ Combate
 Comprobar victoria final XXX
 XXXX TODO Inicio del combate indicar el número de combate y rival
 XXXX TODO Pasar texto a constantes
-TODO Crear objeto combate/ronda?
+NOOO TODO Crear objeto combate/ronda?
+TODO Mayor control de la clase Luchador
 TODO Comentar módulos
 TODO Segunda parte ejercicio FILES
 
