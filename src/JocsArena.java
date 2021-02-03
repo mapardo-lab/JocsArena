@@ -13,8 +13,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class JocsArena {
-    static final short NUM_MAX_COMBATES = 5;    
-    //Elegir una de las dos estrategias
+    static final short NUM_MAX_COMBATES = 5;
     static final String[] ESTRATEGIA = {"Ataque","Defensa","Engaño","Maniobra"};
     static final int EST_ATAQUE = 0;
     static final int EST_DEFENSA = 1;
@@ -26,10 +25,20 @@ public class JocsArena {
     static final int RES_DANOX2 = 2;
     static final int RES_RECUP = 3;
     static final int RES_PENALIZA = 4;
-    
-    //TODO: Poner como constantes los mensajes mostrados por pantalla
-    //TODO: Recuperar ptos vida durante el combate. Variable extra[ID_VIDA]!!!
-   
+    static final String MENSAJE_INICIO = "COMIENZA EL TORNEO. DIEZ COMBATES TE ESPERAN.";
+    static final String MENSAJE_VICTORIA = "Enhorabuena!! Eres el campeón.%nHas conseguido %d puntos.%n";
+    static final String MENSAJE_DERROTA = "Lástima. Vuelve a intentarlo.";
+    static final String MENSAJE_INICIO_COMBATE = "COMBATE NÚMERO %d%n";
+    static final String MENSAJE_VICTORIA_COMBATE = "Has ganado el combate!!!";
+    static final String MENSAJE_DERROTA_COMBATE = "Perdiste el combate";
+    static final String MENSAJE_PTOS_EXP = "Ganas %d puntos de experiencia.%n";
+    static final String MENSAJE_NIVEL = "Ganas %d niveles. Tu nivel ahora es %d";
+    static final String MENSAJE_RONDA = "%n%nRONDA %d.%n";
+    static final String MENSAJE_SEPARACION = "----------------------------------------------------------";
+    static final String MENSAJE_ESTRATEGIA = "Elige acción (0-Atacar 1-Defender 2-Engaño 3-Maniobra): ";
+    static final String MENSAJE_RESULTADO = "%s --> %s %d VS %d %s <-- %s%n";
+    static final String MENSAJE_RECUPERA_ATAQUE = "%s recupera toda su habilidad de ataque%n";
+    static final String MENSAJE_RECUPERA_DEFENSA = "%s recupera toda su habilidad de defensa%n";
     
     public static void main(String[] args) {
         JocsArena prg = new JocsArena();
@@ -37,31 +46,30 @@ public class JocsArena {
     }
     
     private void inicio() {
-        System.out.println("COMIENZA EL TORNEO. DIEZ COMBATES TE ESPERAN.");
+        System.out.println(MENSAJE_INICIO);
         Luchador jugador = new Luchador(Luchador.POS_JUGADOR);
         int numCombates = torneo (jugador);
         if (numCombates == 10) {
-            System.out.println("Enhorabuena!! Eres el campeón.");
-            System.out.printf("Has conseguido %d puntos.%n",jugador.atribActual[Luchador.ID_PTOSEXP]);
+            System.out.printf(MENSAJE_VICTORIA,jugador.atribActual[Luchador.ID_PTOSEXP]);
         } else {
-            System.out.println("Lástima. Vuelve a intentarlo.");
+            System.out.println(MENSAJE_DERROTA);
         }
     }
    
     public int torneo(Luchador jugador) {
         boolean resultadoCombate = false;
         int numCombates = 0;        
-        do { 
+        do {
+            System.out.printf(MENSAJE_INICIO_COMBATE,numCombates+1);
             int idRival = Luchador.seleccionarRival(jugador);
             Luchador rival = new Luchador(idRival);
-
             resultadoCombate = combate(jugador, rival);
             if (resultadoCombate) {
-                System.out.println("Has ganado el combate!!!");
+                System.out.println(MENSAJE_VICTORIA_COMBATE);
                 numCombates = numCombates + 1;
                 postCombate(jugador, rival);                       
             } else {
-                System.out.println("Perdiste el combate");
+                System.out.println(MENSAJE_DERROTA_COMBATE);
             }
         } while (resultadoCombate & numCombates < NUM_MAX_COMBATES);
         return numCombates;
@@ -70,11 +78,11 @@ public class JocsArena {
     private void postCombate(Luchador jugador, Luchador rival) {
         comprobarPenaliz(jugador);
         jugador.atrib[Luchador.ID_PTOSEXP] = jugador.atrib[Luchador.ID_PTOSEXP] + rival.atrib[Luchador.ID_PTOSEXP];
-        System.out.printf("Ganas %d puntos de experiencia.%n",rival.atribActual[Luchador.ID_PTOSEXP]);
+        System.out.printf(MENSAJE_PTOS_EXP,rival.atribActual[Luchador.ID_PTOSEXP]);
         if (jugador.atrib[Luchador.ID_PTOSEXP]/100 >= jugador.atrib[Luchador.ID_NIVEL]) {
             int numNivel = (jugador.atrib[Luchador.ID_PTOSEXP] - (jugador.atrib[Luchador.ID_NIVEL]-1)*100)/100;
             jugador.atrib[Luchador.ID_NIVEL] = jugador.atrib[Luchador.ID_NIVEL] + numNivel;
-            System.out.printf("Ganas %d niveles. Tu nivel ahora es %d",numNivel,jugador.atrib[Luchador.ID_NIVEL]);        
+            System.out.printf(MENSAJE_NIVEL,numNivel,jugador.atrib[Luchador.ID_NIVEL]);        
             jugador.atrib[Luchador.ID_VIDA] = jugador.atrib[Luchador.ID_VIDA] + numNivel *2;
             for (int i=0; i<numNivel;i++) {
                 Random aleat = new Random();
@@ -111,12 +119,12 @@ public class JocsArena {
     }
     
     private void mostrarInfoRonda(int numRonda, Luchador jugador, Luchador rival) {
-        System.out.printf("%n%nRONDA %d.%n",numRonda);
-        System.out.println("----------------------------------------------------------");
+        System.out.printf(MENSAJE_RONDA,numRonda);
+        System.out.println();
         jugador.mostrarLuchador();
-        System.out.println("-------------------------VS-------------------------------");
+        System.out.println(MENSAJE_SEPARACION);
         rival.mostrarLuchador();
-        System.out.println("----------------------------------------------------------");
+        System.out.println(MENSAJE_SEPARACION);
     }
     
     private int solicitarEstrategia() {
@@ -124,7 +132,7 @@ public class JocsArena {
         boolean okEstrategia = false;
         int estrategia = 0;
         while (!okEstrategia) {
-            System.out.print("Elige acción (0-Atacar 1-Defender 2-Engaño 3-Maniobra): ");
+            System.out.print(MENSAJE_ESTRATEGIA);
             okEstrategia = lectura.hasNextInt();
             if (okEstrategia) {
                 estrategia = lectura.nextInt();
@@ -147,8 +155,8 @@ public class JocsArena {
     private void resolverRonda(Luchador jugador, Luchador rival, int jugadorEst, int rivalEst) {
         int jugadorExitos = tirada(jugadorEst,jugador);
         int rivalExitos = tirada(rivalEst,rival);
-        System.out.println("----------------------------------------------------------");
-        System.out.printf("%s --> %s %d VS %d %s <-- %s%n",
+        System.out.println(MENSAJE_SEPARACION);
+        System.out.printf(MENSAJE_RESULTADO,
                 jugador.nombre,ESTRATEGIA[jugadorEst], jugadorExitos,
                 rivalExitos, ESTRATEGIA[rivalEst],rival.nombre);
         int resultadoJugador = RESULTADO[jugadorEst][rivalEst];
@@ -186,11 +194,11 @@ public class JocsArena {
     private void comprobarPenaliz(Luchador luchador) {
         if (luchador.atribActual[Luchador.ID_ATAQUE] < luchador.atrib[Luchador.ID_ATAQUE]) {
             luchador.atribActual[Luchador.ID_ATAQUE] = luchador.atrib[Luchador.ID_ATAQUE];
-            System.out.printf("%s recupera toda su habilidad de ataque%n",luchador.nombre);
+            System.out.printf(MENSAJE_RECUPERA_ATAQUE,luchador.nombre);
         }
         if (luchador.atribActual[Luchador.ID_DEFENSA] < luchador.atrib[Luchador.ID_DEFENSA]) {
             luchador.atribActual[Luchador.ID_DEFENSA] = luchador.atrib[Luchador.ID_DEFENSA];
-            System.out.printf("%s recupera toda su habilidad de defensa%n",luchador.nombre);
+            System.out.printf(MENSAJE_RECUPERA_DEFENSA,luchador.nombre);
         }
     }
 }
