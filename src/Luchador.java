@@ -44,6 +44,10 @@ public class Luchador {
     static final String INFO_VIDA = "%s recupera %d puntos de vida%n";
     static final String INFO_PENA_ATAQUE = "%s pierde %d puntos de ataque%n";
     static final String INFO_PENA_DEFENSA = "%s pierde %d puntos de defensa%n";
+    static final String INFO_RECUPERA_ATAQUE = "%s recupera toda su habilidad de ataque%n";
+    static final String INFO_RECUPERA_DEFENSA = "%s recupera toda su habilidad de defensa%n";
+    static final String INFO_PTOS_EXP = "Ganas %d puntos de experiencia.%n";
+    static final String INFO_NIVEL = "Ganas %d niveles. Tu nivel ahora es %d";
     
     String nombre = new String();
     int[] atribActual = new int[NUM_ATRIB];
@@ -136,5 +140,39 @@ public class Luchador {
             i = i + 1;
         }
         return idRival;
+    }
+    
+    public void comprobarPenaliz() {
+        if (atribActual[ID_ATAQUE] < atrib[ID_ATAQUE]) {
+            atribActual[ID_ATAQUE] = atrib[ID_ATAQUE];
+            System.out.printf(INFO_RECUPERA_ATAQUE,nombre);
+        }
+        if (atribActual[ID_DEFENSA] < atrib[ID_DEFENSA]) {
+            atribActual[ID_DEFENSA] = atrib[ID_DEFENSA];
+            System.out.printf(INFO_RECUPERA_DEFENSA,nombre);
+        }
+    }
+    public void sumarPuntosExp(int ptosExp) {
+        atrib[ID_PTOSEXP] = atrib[ID_PTOSEXP] + ptosExp;
+        System.out.printf(INFO_PTOS_EXP,ptosExp);
+    }
+    
+    public void comprobarNivel() {
+        if (atrib[ID_PTOSEXP]/100 >= atrib[ID_NIVEL]) {
+            int numNivel = (atrib[ID_PTOSEXP] - (atrib[ID_NIVEL]-1)*100)/100;
+            atrib[ID_NIVEL] = atrib[ID_NIVEL] + numNivel;
+            System.out.printf(INFO_NIVEL,numNivel,atrib[ID_NIVEL]);        
+            atrib[ID_VIDA] = atrib[ID_VIDA] + numNivel *2;
+            for (int i=0; i<numNivel;i++) {
+                Random aleat = new Random();
+                int habilidad = aleat.nextInt(2);
+                if (habilidad == 0) {
+                    atrib[ID_ATAQUE] = atrib[ID_ATAQUE] + 1;
+                } else {
+                    atrib[ID_DEFENSA] = atrib[ID_DEFENSA] + 1;
+                }
+            }
+            actualizarAtrib();
+        }
     }
 }
